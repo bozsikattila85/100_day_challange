@@ -43,9 +43,11 @@ class CoffeeMachine:
         return f"Water: {self.water}ml\nMilk: {self.milk}ml\nCoffee: {self.coffee}g\nMoney: ${self.money}"
 
     def is_enough(self, ingredient_type, amount):
+        """Check if there is enough of a given resource in the coffee machine"""
         return amount <= getattr(self, ingredient_type)
 
     def is_enough_for(self, recipe):
+        """Check if there is enough resource in the coffee machine"""
         return (self.is_enough("water", self.MENU[recipe]["ingredients"]["water"]) and
                 self.is_enough("milk", self.MENU[recipe]["ingredients"]["milk"]) and
                 self.is_enough("coffee", self.MENU[recipe]["ingredients"]["coffee"])
@@ -64,18 +66,19 @@ class CoffeeMachine:
             missing += "Sorry theres not enough coffee.\n"
         return missing
 
-    def sub_recources(self, recipe):
+    def substract_resources(self, recipe):
         self.water -= self.MENU[recipe]["ingredients"]["water"]
         self.milk -= self.MENU[recipe]["ingredients"]["milk"]
         self.coffee -= self.MENU[recipe]["ingredients"]["coffee"]
 
     def get_coins(self):
+        """Returns the total value of inserted coins."""
         print("Please insert coins.")
-        quarters = int(input("quarters:"))
-        dimes = int(input("dimes:"))
-        nickles = int(input("nickles:"))
-        pennies = int(input("pennies:"))
-        return quarters * 0.25 + dimes * 0.1 + nickles * 0.05 + pennies * 0.01
+        total = int(input("quarters:")) * 0.25
+        total += int(input("dimes:")) * 0.1
+        total += int(input("nickles:")) * 0.05
+        total += int(input("pennies:")) * 0.01
+        return total
 
     def order_processing(self, choice):
         if self.is_enough_for(choice):
@@ -83,7 +86,7 @@ class CoffeeMachine:
             if coins >= self.get_recipe_price(choice):
                 self.money += self.get_recipe_price(choice)
                 coins -= self.get_recipe_price(choice)
-                self.sub_recources(choice)
+                self.substract_resources(choice)
                 print(f"Espresso is done, enjoy!\nHere is ${coins:.2f} dollars in change.")
             else:
                 print(f"Sorry that's not enough money. Returning ${coins} dollars.")
@@ -91,6 +94,7 @@ class CoffeeMachine:
             print(self.get_missing_resources(choice))
 
     def run(self):
+        """Main loop"""
         choice = ""
         while choice != "off":
             choice = input("What would you like? (espresso/latte/cappuccino):")
