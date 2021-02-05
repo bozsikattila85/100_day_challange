@@ -11,7 +11,7 @@ class CoffeeMachine:
         self.water = 300
         self.milk = 200
         self.coffee = 100
-        self.money = 0
+        self.profit = 0
         self.MENU = {
             "espresso": {
                 "ingredients": {
@@ -40,7 +40,7 @@ class CoffeeMachine:
         }
 
     def __str__(self):
-        return f"Water: {self.water}ml\nMilk: {self.milk}ml\nCoffee: {self.coffee}g\nMoney: ${self.money}"
+        return f"Water: {self.water}ml\nMilk: {self.milk}ml\nCoffee: {self.coffee}g\nMoney: ${self.profit}"
 
     def is_enough(self, ingredient_type, amount):
         """Check if there is enough of a given resource in the coffee machine"""
@@ -84,25 +84,24 @@ class CoffeeMachine:
         if self.is_enough_for(choice):
             coins = self.get_coins()
             if coins >= self.get_recipe_price(choice):
-                self.money += self.get_recipe_price(choice)
-                coins -= self.get_recipe_price(choice)
-                self.substract_resources(choice)
-                print(f"Espresso is done, enjoy!\nHere is ${coins:.2f} dollars in change.")
+                self.make_order(choice, coins)
             else:
                 print(f"Sorry that's not enough money. Returning ${coins} dollars.")
         else:
             print(self.get_missing_resources(choice))
+
+    def make_order(self, choice, coins):
+        self.profit += self.get_recipe_price(choice)
+        coins -= self.get_recipe_price(choice)
+        self.substract_resources(choice)
+        print(f"Espresso is done, enjoy!\nHere is ${coins:.2f} dollars in change.")
 
     def run(self):
         """Main loop"""
         choice = ""
         while choice != "off":
             choice = input("What would you like? (espresso/latte/cappuccino):")
-            if choice == "espresso":
-                self.order_processing(choice)
-            if choice == "latte":
-                self.order_processing(choice)
-            if choice == "cappuccino":
+            if choice == "espresso" or choice == "latte" or choice == "cappuccino":
                 self.order_processing(choice)
             if choice == "report":
                 print(self.__str__())
