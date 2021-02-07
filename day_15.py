@@ -94,7 +94,7 @@ class CoffeeMachine:
         self.profit += self.get_recipe_price(choice)
         coins -= self.get_recipe_price(choice)
         self.substract_resources(choice)
-        print(f"Espresso is done, enjoy!\nHere is ${coins:.2f} dollars in change.")
+        print(f"Your {choice} is done, enjoy!\nHere is ${coins:.2f} dollars in change.")
 
     def run(self):
         """Main loop"""
